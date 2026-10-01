@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Upload Scores — {{ classroom.name }}{% endblock %}
+
+{% block content %}
+<!-- Top navigation -->
+<nav class="bg-white border-b border-slate-200 sticky top-0 z-20">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-9 h-9 bg-brand-600 rounded-xl flex items-center justify-center">
+                <svg class="w-5 h-5 text-sunny-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/>
+                </svg>
+            </div>
+            <span class="text-xl font-extrabold text-brand-800">Classory</span>
+        </div>
+        <a href="{% url 'classrooms:home' classroom.id %}" class="text-sm font-semibold text-slate-500 hover:text-brand-600 transition">← Back to classroom</a>
+    </div>
+</nav>
+
+<main class="max-w-2xl mx-auto px-6 py-10">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-slate-800">Upload Test Scores</h1>
+        <p class="text-slate-500 mt-1">{{ classroom.name }} — Upload an Excel file with student scores.</p>
+    </div>
+
+    <form method="post" action="{% url 'classrooms:upload_scores' classroom.id %}" class="space-y-6">
+        {% csrf_token %}
+
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 space-y-5">
+            <div>
+                <label for="test_name" class="block text-sm font-semibold text-slate-700 mb-1.5">Test name</label>
+                <input type="text" id="test_name" name="test_name" required
+                       class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-brand-500 focus:ring-4 focus:ring-brand-100 outline-none transition"
+                       placeholder="e.g. Quiz 3 — Algebra">
+            </div>
+
+            <div>
+                <label for="total_score" class="block text-sm font-semibold text-slate-700 mb-1.5">Total score</label>
+                <input type="number" id="total_score" name="total_score" required min="1"
+                       class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-brand-500 focus:ring-4 focus:ring-brand-100 outline-none transition"
+                       placeholder="e.g. 50">
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-2">Excel file</label>
+                <p class="text-sm text-slate-500 mb-3">Upload an <strong>.xlsx</strong> or <strong>.xls</strong> file with columns: <strong>Student ID</strong>, <strong>First Name</strong>, <strong>Last Name</strong>, <strong>Score</strong>.</p>
+
+                <label for="excel_file" class="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-slate-300 rounded-2xl cursor-pointer bg-slate-50 hover:bg-brand-50 hover:border-brand-400 transition group">
+                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                        <div class="w-14 h-14 rounded-2xl bg-brand-100 group-hover:bg-brand-200 flex items-center justify-center mb-3 transition">
+                            <svg class="w-7 h-7 text-brand-600" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
+                            </svg>
+                        </div>
+                        <p class="text-sm font-semibold text-slate-700">Click to upload your Excel file</p>
+                        <p class="text-xs text-slate-400 mt-1">.xlsx or .xls — up to 10MB</p>
+                    </div>
+                    <input type="file" id="excel_file" name="excel_file" accept=".xlsx,.xls" class="hidden">
+                </label>
+            </div>
+        </div>
+
+        <button type="submit"
+                class="w-full py-4 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-lg shadow-lg shadow-brand-600/25 transition transform hover:-translate-y-0.5">
+            Upload Scores
+        </button>
+    </form>
+</main>
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}Register — Classory{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex">
+    <!-- Left panel — form -->
+    <div class="w-full lg:w-1/2 flex items-center justify-center px-6 py-12 order-2 lg:order-1">
+        <div class="w-full max-w-md">
+            <h2 class="text-3xl font-bold text-slate-800">Create your account</h2>
+            <p class="text-slate-500 mt-2 mb-8">Join Classory as a student or teacher.</p>
+
+            <form method="post" action="{% url 'accounts:register' %}" class="space-y-5">
+                {% csrf_token %}
+
+                <!-- Role selector -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">I am a…</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="role" value="student" checked class="peer sr-only">
+                            <div class="flex flex-col items-center gap-2 p-4 rounded-xl border-2 border-slate-200 peer-checked:border-brand-500 peer-checked:bg-brand-50 transition hover:border-brand-300">
+                                <svg class="w-8 h-8 text-brand-600" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"/>
+                                </svg>
+                                <span class="text-sm font-semibold text-slate-700">Student</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="role" value="teacher" class="peer sr-only">
+                            <div class="flex flex-col items-center gap-2 p-4 rounded-xl border-2 border-slate-200 peer-checked:border-sunny-500 peer-checked:bg-amber-50 transition hover:border-sunny-400">
+                                <svg class="w-8 h-8 text-sunny-600" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
+                                </svg>
+                                <span class="text-sm font-semibold text-slate-700">Teacher</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="username" class="block text-sm font-semibold text-slate-700 mb-1.5">Username</label>
+                    <input type="text" id="username" name="username" required
+                           class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-brand-500 focus:ring-4 focus:ring-brand-100 outline-none transition"
+                           placeholder="e.g. juan.delacruz">
+                </div>
+
+                <div>
+                    <label for="email" class="block text-sm font-semibold text-slate-700 mb-1.5">Email address</label>
+                    <input type="email" id="email" name="email" required
+                           class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-brand-500 focus:ring-4 focus:ring-brand-100 outline-none transition"
+                           placeholder="you@example.com">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="password" class="block text-sm font-semibold text-slate-700 mb-1.5">Password</label>
+                        <input type="password" id="password" name="password" required
+                               class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-brand-500 focus:ring-4 focus:ring-brand-100 outline-none transition"
+                               placeholder="••••••••">
+                    </div>
+                    <div>
+                        <label for="password2" class="block text-sm font-semibold text-slate-700 mb-1.5">Confirm</label>
+                        <input type="password" id="password2" name="password2" required
+                               class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-brand-500 focus:ring-4 focus:ring-brand-100 outline-none transition"
+                               placeholder="••••••••">
+                    </div>
+                </div>
+
+                <button type="submit"
+                        class="w-full py-3.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold shadow-lg shadow-brand-600/25 transition transform hover:-translate-y-0.5">
+                    Continue
+                </button>
+            </form>
+
+            <div class="mt-8 text-center">
+                <p class="text-slate-500">
+                    Already have an account?
+                    <a href="{% url 'accounts:login' %}" class="font-semibold text-brand-600 hover:text-brand-700 hover:underline">Sign in</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right panel — branding -->
+    <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-sunny-400 via-sunny-500 to-sunny-600 relative overflow-hidden items-center justify-center order-1 lg:order-2">
+        <div class="absolute -top-24 -right-24 w-96 h-96 bg-brand-600/20 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-32 -left-16 w-[28rem] h-[28rem] bg-brand-600/20 rounded-full blur-3xl"></div>
+        <div class="relative z-10 text-center px-12">
+            <div class="flex items-center justify-center gap-3 mb-8">
+                <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-lg">
+                    <svg class="w-8 h-8 text-sunny-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/>
+                    </svg>
+                </div>
+                <h1 class="text-4xl font-extrabold text-white tracking-tight">Classory</h1>
+            </div>
+            <p class="text-white/90 text-lg leading-relaxed max-w-md mx-auto">
+                Learn together, grow together. Create your account and step into a smarter way to manage your classroom.
+            </p>
+            <div class="mt-12 bg-white/15 backdrop-blur rounded-2xl p-6 max-w-sm mx-auto">
+                <p class="text-white italic">"Classory made managing my sections so much easier. Everything just works."</p>
+                <p class="text-sunny-200 text-sm mt-3 font-medium">— Miracle Edroso, Teacher</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
