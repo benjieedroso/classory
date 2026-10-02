@@ -5,6 +5,12 @@ from django.contrib.auth.models import User
 from accounts.models import UserProfile
 from django.contrib.auth.hashers import make_password
 from .models import Classroom
+from django.http import HttpResponse
+
+#Excel handling
+from io import BytesIO
+from openpyxl import Workbook
+
 
 import pandas as pd
 # Mock data — no models yet, just for UI demonstration
@@ -71,6 +77,12 @@ def create_classroom_view(request):
             
             num_students = len(data)
             
+            classroom = classroom_form.save(commit=False)
+            classroom.students = num_students
+            classroom.teacher = request.user.userprofile  # Assuming the logged-in user is a teacher
+            classroom.save()
+            
+            
             for student in data:
                 user = User.objects.create_user(
                     username=student['First Name'].lower() + student['Last Name'].lower(),
@@ -82,15 +94,9 @@ def create_classroom_view(request):
                 UserProfile.objects.create(
                     user=user,
                     role='student',
-                    section=student['Section']
+                    section=student['Section'],
+                    classroom=classroom
                 )
-            
-            classroom_form.instance.students = num_students  # Set the number of students
-            
-            teacher_profile, created = UserProfile.objects.get_or_create(user=request.user, role='teacher')
-            classroom_form.instance.teacher = teacher_profile  # Set the teacher to the logged-in user
-            
-            classroom_form.save()  # Save the classroom instance
             
             
             return redirect("classrooms:dashboard")
@@ -103,7 +109,7 @@ def create_classroom_view(request):
 
 def classroom_home_view(request, classroom_id):
     """The inside-classroom page — same UI for students and teachers."""
-    classroom = next((c for c in MOCK_CLASSROOMS if c["id"] == classroom_id), None)
+    classroom = Classroom.objects.get(id=classroom_id)
     if classroom is None:
         return redirect("classrooms:dashboard")
     return render(request, "classrooms/classroom_home.html", {"classroom": classroom})
@@ -111,7 +117,7 @@ def classroom_home_view(request, classroom_id):
 
 def upload_scores_view(request, classroom_id):
     """Teacher uploads an Excel file with student scores."""
-    classroom = next((c for c in MOCK_CLASSROOMS if c["id"] == classroom_id), None)
+    classroom = Classroom.objects.get(id=classroom_id)
     if classroom is None:
         return redirect("classrooms:dashboard")
 
@@ -124,7 +130,7 @@ def upload_scores_view(request, classroom_id):
 
 def upload_done_view(request, classroom_id):
     """Shows a success notification after score upload."""
-    classroom = next((c for c in MOCK_CLASSROOMS if c["id"] == classroom_id), None)
+    classroom = Classroom.objects.get(id=classroom_id)
     if classroom is None:
         return redirect("classrooms:dashboard")
     return render(request, "classrooms/upload_done.html", {"classroom": classroom})
@@ -132,7 +138,7 @@ def upload_done_view(request, classroom_id):
 
 def student_scores_view(request, classroom_id):
     """Student sees their own scores only."""
-    classroom = next((c for c in MOCK_CLASSROOMS if c["id"] == classroom_id), None)
+    classroom = Classroom.objects.get(id=classroom_id)
     if classroom is None:
         return redirect("classrooms:dashboard")
     return render(request, "classrooms/student_scores.html", {
@@ -153,4 +159,34 @@ def build_excel_template(classroom):
 def download_scores_view(request, classroom_id):
     """Download an Excel template with student IDs, names, and empty score column."""
     
-    pass
+    students = UserProfile.objects.filter(classroom_id=classroom_id, role='student').values('id', 'user__first_name', 'user__last_name')
+    
+    #Create an excel
+    wb = Workbook()
+    ws = wb.active
+    
+    ws.title = "Student Scores Template"
+    
+    headers = ["Student ID", "First Name", "Last Name", "Score"]
+    ws.append(headers)
+    
+    for student in students:
+        ws.append(
+            [student['id'], student['user__first_name'], student['user__last_name'], ""]
+        )
+        
+    buffer = BytesIO()
+    wb.save(buffer)
+    buffer.seek(0)
+    
+    filename = f"Student Scores Template - Classroom {classroom_id}.xlsx"
+    response = HttpResponse(buffer, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'  
+    
+    return response
+    
+    
+    
+    
+    
+    

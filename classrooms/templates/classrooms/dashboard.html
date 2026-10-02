@@ -23,21 +23,24 @@
 <main class="max-w-6xl mx-auto px-6 py-10">
     <h1 class="text-3xl font-bold text-slate-800 mb-8">My Classrooms</h1>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         {% for classroom in classrooms %}
         <a href="{% url 'classrooms:home' classroom.id %}"
-           class="group bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:border-brand-300 transition-all duration-300 overflow-hidden transform hover:-translate-y-1">
-            <div class="h-28 relative {% if classroom.color == 'yellow' %}bg-gradient-to-br from-sunny-400 to-sunny-600{% else %}bg-gradient-to-br from-brand-500 to-brand-700{% endif %}">
+           class="group bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:border-brand-300 transition-all duration-300 overflow-hidden transform hover:-translate-y-1 flex flex-col h-full">
+            <div class="h-28 relative flex-shrink-0 {% if classroom.color == 'yellow' %}bg-gradient-to-br from-sunny-400 to-sunny-600{% else %}bg-gradient-to-br from-brand-500 to-brand-700{% endif %}">
                 <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle at 20% 50%, white 1.5px, transparent 1.5px); background-size: 22px 22px;"></div>
+                <div class="absolute top-4 left-5 flex items-center gap-2">
+                    <span class="px-2 py-1 rounded-full bg-white/20 backdrop-blur text-white text-xs font-semibold">Classroom ID: {{ classroom.id }}</span>
+                </div>
                 <div class="absolute bottom-4 left-5 right-5 flex items-end justify-between">
                     <span class="px-3 py-1 rounded-full bg-white/20 backdrop-blur text-white text-xs font-semibold">{{ classroom.subject }}</span>
                     <span class="text-white/80 text-xs font-medium">{{ classroom.students }} students</span>
                 </div>
             </div>
-            <div class="p-5">
+            <div class="p-5 flex flex-col flex-grow">
                 <h3 class="text-lg font-bold text-slate-800 group-hover:text-brand-700 transition">{{ classroom.name }}</h3>
                 <p class="text-sm text-slate-500 mt-1.5 line-clamp-2">{{ classroom.description }}</p>
-                <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100">
+                <div class="flex items-center gap-2 mt-auto pt-4 border-t border-slate-100">
                     <div class="w-8 h-8 rounded-full bg-brand-100 flex items-center justify-center">
                         <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
@@ -45,7 +48,7 @@
                     </div>
                     <span class="text-sm text-slate-600">{{ classroom.teacher }}</span>
                     <svg class="w-4 h-4 ml-auto text-slate-300 group-hover:text-brand-500 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5L21 12H3"/>
                     </svg>
                 </div>
             </div>
