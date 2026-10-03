@@ -1,4 +1,3 @@
 from django.contrib import admin
-from .models import Classroom
 
-admin.site.register(Classroom)
+# Admin configurations will be added here

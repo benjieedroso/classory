@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 {% block title %}Upload Scores — {{ classroom.name }}{% endblock %}
 
 {% block content %}
@@ -23,23 +24,11 @@
         <p class="text-slate-500 mt-1">{{ classroom.name }} — Upload an Excel file with student scores.</p>
     </div>
 
-    <form method="post" action="{% url 'classrooms:upload_scores' classroom.id %}" class="space-y-6">
+    <form method="post" action="{% url 'classrooms:upload_scores' classroom.id %}" class="space-y-6" enctype="multipart/form-data">
         {% csrf_token %}
 
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 space-y-5">
-            <div>
-                <label for="test_name" class="block text-sm font-semibold text-slate-700 mb-1.5">Test name</label>
-                <input type="text" id="test_name" name="test_name" required
-                       class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-brand-500 focus:ring-4 focus:ring-brand-100 outline-none transition"
-                       placeholder="e.g. Quiz 3 — Algebra">
-            </div>
-
-            <div>
-                <label for="total_score" class="block text-sm font-semibold text-slate-700 mb-1.5">Total score</label>
-                <input type="number" id="total_score" name="total_score" required min="1"
-                       class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-brand-500 focus:ring-4 focus:ring-brand-100 outline-none transition"
-                       placeholder="e.g. 50">
-            </div>
+            {% crispy form %}
 
             <div>
                 <label class="block text-sm font-semibold text-slate-700 mb-2">Excel file</label>
